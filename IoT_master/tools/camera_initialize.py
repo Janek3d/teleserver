@@ -14,11 +14,9 @@ class Camera:
             self.adres = self.adres_part_1+'2'+self.adres_part_2
         else:
             self.adres = self.adres_part_1+'1'+self.adres_part_2
-        #self.cam = cv2.VideoCapture(self.adres)
         self.cam = cv2.VideoCapture(self.adres)
         self.ret, self.img = self.cam.read()
         return self.ret, self.img
-
 
 if __name__=='__main__':
 
