@@ -53,6 +53,7 @@ class ThermalCamera:
         return self.ret, self.img
 
 
+<<<<<<< HEAD
 if __name__ == '__main__':
     """This part of the code only runs when script is run as main module
     and doesn't run when it is imported module.
@@ -60,6 +61,9 @@ if __name__ == '__main__':
     Initializes ThermalCamera class and displays image from camera in window.
     Two working keys are ESC to close window and SPACE to change displayed channel.
     """
+=======
+if __name__=='__main__':
+>>>>>>> 7e90d106b6490ee0420b1da0adf145bd200a46fc
 
     camera_class = ThermalCamera('config.ini')
     cv2.namedWindow('Camera')
