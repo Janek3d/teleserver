@@ -6,10 +6,10 @@ class Camera:
     def __init__(self, file):
         config = ConfigParser()
         config.read(file)
-        self.login = config.get('camera_address', 'login')
-        self.password = config.get('camera_address', 'password')
-        self.ip_address = config.get('camera_address', 'ip_address')
-        self.channel = '1'
+        self.login = config.get('camera_address','login')
+        self.password = config.get('camera_address','password')
+        self.ip_address = config.get('camera_address','ip_address')
+        self.channel = config.get('camera_address', 'channel')
         self.address = (f'rtsp://{self.login}:{self.password}@{self.ip_address}'
                         f'/cam/realmonitor?channel={self.channel}&subtype=0')
         self.cam = cv2.VideoCapture(self.address)
