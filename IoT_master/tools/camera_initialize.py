@@ -28,7 +28,7 @@ class Camera:
         return self.ret, self.img
 
 
-if __name__ == '__main__':
+if __name__=='__main__':
 
     kamera_class = Camera('config.ini')
     cv2.namedWindow('Camera')
