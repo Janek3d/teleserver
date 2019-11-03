@@ -1,6 +1,10 @@
 import cv2
 
+<<<<<<< HEAD
 from secret_manager import SecretManager
+=======
+from tools.secret_manager import SecretManager
+>>>>>>> 1532dd6862f151b7d05695417a1904bb60e8dd7e
 
 
 class ThermalCamera:
