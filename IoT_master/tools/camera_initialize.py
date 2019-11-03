@@ -1,6 +1,6 @@
 import cv2
 
-from IoT_master.tools.secret_manager import SecretManager
+from secret_manager import SecretManager
 
 
 class ThermalCamera:
