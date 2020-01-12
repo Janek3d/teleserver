@@ -4,6 +4,8 @@ try:
     from tools.secret_manager import SecretManager
 except ModuleNotFoundError:
     from secret_manager import SecretManager
+from secret_manager import SecretManager
+from tools.secret_manager import SecretManager
 
 
 class ThermalCamera:

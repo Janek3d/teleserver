@@ -8,6 +8,9 @@ try:
 except ModuleNotFoundError:
     from common import TELESERVER_DIR
 
+from common import TELESERVER_DIR
+from tools.common import TELESERVER_DIR
+
 
 class SecretManager():
     """Class for managing passwords to teleserver
@@ -71,7 +74,7 @@ class SecretManager():
         """Save current secrets to secret file
         """
         try:
-            os.mknod(self.secret_file)
+            os.mknod('IoT_secrets.ini')
         except FileExistsError:
             pass
         with open(self.secret_file, 'w') as secret_file:
