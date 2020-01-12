@@ -3,18 +3,12 @@ import configparser
 from cryptography.fernet import Fernet
 import os
 
-<<<<<<< HEAD
 try:
     from tools.common import TELESERVER_DIR
 except ModuleNotFoundError:
     from common import TELESERVER_DIR
-=======
-<<<<<<< HEAD
 from common import TELESERVER_DIR
-=======
 from tools.common import TELESERVER_DIR
->>>>>>> 1532dd6862f151b7d05695417a1904bb60e8dd7e
->>>>>>> Dysproz-master
 
 
 class SecretManager():
