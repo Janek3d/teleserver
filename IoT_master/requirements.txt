@@ -3,3 +3,5 @@ opencv-python
 parameterized>=0.7
 pyyaml
 requests
+torch
+torchvision
