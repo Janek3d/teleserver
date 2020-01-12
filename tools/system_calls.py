@@ -6,8 +6,10 @@ import pyscreenshot as ImageGrab
 from subprocess import call
 import webbrowser
 from Xlib.error import DisplayNameError
+import yaml
+from collections import deque
 
-from tools.common import UPLOAD_DIRECTORY
+from tools.common import UPLOAD_DIRECTORY, TELESERVER_DIR
 
 try:
     from pynput.keyboard import Controller
@@ -161,3 +163,41 @@ def get_screen():
     buffered_screen = BytesIO()
     screen.save(buffered_screen, format='JPEG')
     return base64.b64encode(buffered_screen.getvalue()).decode('utf-8')
+
+
+def url_history(url):
+    """ Saves casted url in file
+
+    :param url: Url to save
+    :type url: str
+    """
+
+    with open(f'{TELESERVER_DIR}/app/config.yml', 'r') as file:
+        config_file = yaml.safe_load(file)
+        historic_urls = config_file.get('url_history').get("urls")
+        number_of_urls = config_file.get('url_history').get("max_len")
+        if not number_of_urls:
+            number_of_urls = 10
+
+    if historic_urls:
+        historic_urls_queue = deque(historic_urls, number_of_urls)
+        historic_urls_queue.append(url)
+        historic_urls = list(historic_urls_queue)
+    else:
+        historic_urls = [url]
+
+    with open(f'{TELESERVER_DIR}/app/config.yml', 'w') as file:
+        config_file['url_history']['urls'] = historic_urls
+        yaml.dump(config_file, file, default_flow_style=False)
+
+
+def get_url_history():
+    """Get array of casted urls
+
+    :return: Array of urls
+    :rtype: array
+    """
+    with open(f'{TELESERVER_DIR}/app/config.yml') as file:
+        urls = yaml.safe_load(file)
+        urls_hist = urls.get('url_history').get("urls")
+    return urls_hist

@@ -1,0 +1,14 @@
+calendar:
+ iframe:
+ api_credentials:
+ calendarID:
+url_history:
+  max_len: 10
+  urls:
+modules:
+  - system
+  - files
+  - shortcuts
+  - keyboard
+  - screen
+  - calendar

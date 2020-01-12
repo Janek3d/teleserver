@@ -8,6 +8,8 @@ from functools import wraps
 import inspect
 import jwt
 import os
+import datetime
+import dash_html_components as html
 
 from layouts.keyboard_layout import FLAT_KEYBOARD_KEYS, KEYBOARD_NAMES
 from layouts.key_control_layout import SHORTCUT_NAMES, SHORTCUTS
@@ -15,7 +17,9 @@ from layouts.main_layout import gui_layout, tab_render
 import tools.app_callbacks as callback
 from tools.common import OPENMEET_var
 from tools.secret_manager import SecretManager
+from tools.calendar_generation import sendToGoogleCalendar, initializeCalendar, desk_available
 import tools.system_calls as system
+from IoT_master.tmp_tab import desk_reservations
 
 sec = SecretManager()
 VALID_USERNAME_PASSWORD_PAIRS = sec.get_credentials_for_GUI()
@@ -61,6 +65,13 @@ def token_required(f):
             return jsonify({'message': 'Token is invalid!'})
         return f(*args, **kwargs)
     return decorated
+
+
+@server.route('/healthcheck')
+def healthcheck():
+    """This route is designed to check whether server is health
+    """
+    return jsonify({'message': 'Server is health', 'rc': 0})
 
 
 @server.route('/login', methods=['GET', 'POST'])
@@ -168,8 +179,27 @@ def API_call_word():
     [Input('url-button', 'n_clicks')], [State('url', 'value')])
 def GUI_app_open(n_clicks, value):
     if n_clicks != 0:
-        system.web_open(value)
+        if not value:
+            pass
+        else:
+            system.web_open(value)
     return u'opened'
+
+
+@app.callback(
+    Output('url_history', 'children'),
+    [Input('url-button', 'n_clicks')],
+    [State('url', 'value')])
+def app_history(n_clicks, value):
+    if not value:
+        pass
+    else:
+        system.url_history(value)
+    urls = system.get_url_history()
+    if not urls:
+        return
+    urls.reverse()
+    return [html.Option(value='{}'.format(url)) for url in urls]
 
 
 @app.callback(
@@ -341,14 +371,34 @@ def GUI_grab_screen(n):
 
 
 @app.callback(
-    Output('service-principal-output-message', 'children'),
-    [Input('service-principal-button', 'n_intervals')])
-def GUI_generate_service_principal(clicks):
-    if clicks > 0:
-        return sec.create_service_principal()
-    else:
-        return ''
+    [Output('confirm-good', 'displayed'),
+     Output('confirm-bad', 'displayed'),
+     Output('confirm-reserved', 'displayed')],
+    [Input('time-submit-button', 'n_clicks')],
+    [State('date-picker-range', 'start_date'),
+     State('date-picker-range', 'end_date'),
+     State('hour-slider', 'value'),
+     State('minute-slider', 'value'),
+     State('desk-choose', 'value')])
+def pick_datetime(clicks, start_date, end_date, hours, minutes, title):
+    if title is not None:
+        title_new = str(title).split()
+        if start_date and end_date:
+            start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d').date()
+            end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d').date()
+            if clicks != 0:
+                CAL = initializeCalendar()
+                print('After initialization')
+                if not desk_available(CAL, title_new[1], desk_reservations):
+                    return False, False, True
+                    print('After desk_available')
+                result = sendToGoogleCalendar(start_date, end_date, hours, minutes, title, CAL)
+                print('After sending event to Calendar')
+            if result:
+                return True, False, False
+            else:
+                return False, True, False
 
 
 if __name__ == '__main__':
-    server.run(host='0.0.0.0', port=8080)
+    server.run(debug=False, host='0.0.0.0', port=8080, ssl_context='adhoc')

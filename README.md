@@ -8,7 +8,7 @@ This is a client to open you ubuntu machine to local network and allow to contro
 
 [![CircleCI](https://circleci.com/gh/Dysproz/teleserver/tree/master.svg?style=svg)](https://circleci.com/gh/Dysproz/teleserver/tree/master)
 [![GitHub license](https://img.shields.io/github/license/Dysproz/teleserver.svg)](https://github.com/Dysproz/teleserver/blob/master/LICENSE)
-[![Generic badge](https://img.shields.io/badge/ubuntu-18.04|18.10|19.04-e95420.svg)](https://[shields.io/](https://github.com/Dysproz/teleserver))
+[![Generic badge](https://img.shields.io/badge/ubuntu-18.04|18.10|19.04|19.10-e95420.svg)](https://[shields.io/](https://github.com/Dysproz/teleserver))
 [![GitHub release](https://img.shields.io/github/release/Dysproz/teleserver.svg)](https://GitHub.com/Dysproz/Steleserver/releases/)
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 # Install
@@ -25,6 +25,10 @@ This command will run script *install.sh*
 After reboot or session restart, all you need to do is find IP address of your machine (for example with `ip a`).
 
 The server is configured to start at the beginning of user sesison.
+
+**NOTE** Teleserver uses https, so in case of unrecognised address please add `https://` before address.
+
+**NOTE** Teleserver uses self-signed ssl certificate. In case of warning from web browser just click Advanced option and continue to website.
 
 ## Login feature
 
@@ -97,6 +101,19 @@ In this section user has on-screen keyboard that can be used to insert data on t
 I works basically like normal keyboard.
 
 There is also a textbox where user can insert commands compatible with ```xdotool key```
+## Desk reservations in Google Calendar
+
+In order to use a calendar feature you need a Google account and enabled API Calendar.
+Here you can find more information about activating API Calendar:
+![Link](https://developers.google.com/calendar)
+
+Before you start using calendar, a configuration is needed. Configuration file is 
+config.yml in /var/lib/teleserver/app directory.
+There you have to provide iframe to display your calendar, path to a file with 
+a api credentials and a calendarID.
+Remember to put one space after name of the option in a file. 
+Please do not change the order of options and do not put additional enters at the end 
+of a file.
 
 ## teleserver API
 Teleserver API is made of 3 main function groups:
@@ -147,4 +164,5 @@ make test
 * bionic (18.04)
 * cosmic (18.10)
 * disco (19.04)
+* eoan (19.10)
 
