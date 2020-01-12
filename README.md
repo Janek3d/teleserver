@@ -8,7 +8,7 @@ This is a client to open you ubuntu machine to local network and allow to contro
 
 [![CircleCI](https://circleci.com/gh/Dysproz/teleserver/tree/master.svg?style=svg)](https://circleci.com/gh/Dysproz/teleserver/tree/master)
 [![GitHub license](https://img.shields.io/github/license/Dysproz/teleserver.svg)](https://github.com/Dysproz/teleserver/blob/master/LICENSE)
-[![Generic badge](https://img.shields.io/badge/ubuntu-18.04|18.10|19.04-e95420.svg)](https://[shields.io/](https://github.com/Dysproz/teleserver))
+[![Generic badge](https://img.shields.io/badge/ubuntu-18.04|18.10|19.04|19.10-e95420.svg)](https://[shields.io/](https://github.com/Dysproz/teleserver))
 [![GitHub release](https://img.shields.io/github/release/Dysproz/teleserver.svg)](https://GitHub.com/Dysproz/Steleserver/releases/)
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 # Install
@@ -25,6 +25,10 @@ This command will run script *install.sh*
 After reboot or session restart, all you need to do is find IP address of your machine (for example with `ip a`).
 
 The server is configured to start at the beginning of user sesison.
+
+**NOTE** Teleserver uses https, so in case of unrecognised address please add `https://` before address.
+
+**NOTE** Teleserver uses self-signed ssl certificate. In case of warning from web browser just click Advanced option and continue to website.
 
 ## Login feature
 
@@ -46,59 +50,6 @@ When you get it then all the 'commands' will begin with
 <IP address>:8080
 ```
 where 8080 is a port that machine's server operates on.
-
-## CLI interface
-Basic usage is to open web browser on desired website remotely.
-
-Use curl with this url (or just paste url to web browser):
-```
-<IP address>:8080/open?url='<url of your website>'
-```
-
-and
-
-```
-<IP address>:8080/close
-```
-will close the browser.
-
-There's also reboot and poweroff:
-
-```
-<IP address>:8080/reboot
-```
-
-```
-<IP address>:8080/poweroff
-```
-that works exactly as inserting these commands into terminal.
-So:
-
-```
-<IP address>:8080/screenshot
-```
-will take a screenshot.
-
-
-```
-<IP address>:8080/mute
-```
-will mute computer.
-
-There's one more command.
-If you have your favourite website (for example Google Meet),
-you can specify that link in /var/lib/teleserver/tools/common.py by changing OPENMEET_var to your website.
-
-Afterwards
-
-```
-<IP address>:8080/openmeet
-```
-will open link specified by you.
-By default it's linked to Google.
-(Please be aware that after changing OPENMEET_var it's essential to restart server or simply reboot)
-
-CLI interface may be convinient for automated apps that can't use GUI, but should operate somehow with teleserver.
 
 ## GUI
 There's also GUI that covers features specified in previous paragraph and extends it to additional features.
@@ -150,6 +101,50 @@ In this section user has on-screen keyboard that can be used to insert data on t
 I works basically like normal keyboard.
 
 There is also a textbox where user can insert commands compatible with ```xdotool key```
+## Desk reservations in Google Calendar
+
+In order to use a calendar feature you need a Google account and enabled API Calendar.
+Here you can find more information about activating API Calendar:
+![Link](https://developers.google.com/calendar)
+
+Before you start using calendar, a configuration is needed. Configuration file is 
+config.yml in /var/lib/teleserver/app directory.
+There you have to provide iframe to display your calendar, path to a file with 
+a api credentials and a calendarID.
+Remember to put one space after name of the option in a file. 
+Please do not change the order of options and do not put additional enters at the end 
+of a file.
+
+## teleserver API
+Teleserver API is made of 3 main function groups:
+* **webbrowser** - group dedicated to web browser
+* **system** - group dedicated to system tools
+* **keyboard** - group dedicated to keyboard input
+
+These groups may be utilized by calling:
+```
+<IP address>:8080/<group>/<function>?<additional_vars>
+```
+
+### *webbrowser* group functions
+1. *openmeet* - Opens URL to Google Meet defined in *tools/common.py* file.
+2. *open* - Open website provided in additional variable *url*
+3. *close* - Closes webbrowser.
+
+### *system* group functions
+1. *poweroff* - Power off the machine
+2. *reboot* - Reboot the machine
+3. *screenshot* - Take screenshot of current screen
+4. *mute* - Mute machine volume
+5. *grab_screen* - Grabs screenshot of current screen and returns it in base64 format
+6. *set_volume* - Set specific volume level declared in additional variable *lvl*
+
+### Keyboard group functions
+1. *call_key* - Calls specific key or string of keys in xdotool format. Key should be provided in additional variable *key*.
+2. *call_word* - Calls word provided in additional variable *word*.
+
+**NOTE:** In order to call any of API functions it's necessary to first login into GUI page and under system tools generate token. Token should be saved and then append to every call as *token* variable in URL.
+
 
 # Uninstall
 
@@ -158,8 +153,16 @@ In order to uninstall teleserver, run uninstall.sh script from teleserver projec
 make uninstall
 ```
 
+# Test
+
+In order to manually run CI tests execute:
+```
+make test
+```
+
 # Supported releases
 * bionic (18.04)
 * cosmic (18.10)
 * disco (19.04)
+* eoan (19.10)
 
