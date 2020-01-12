@@ -1,9 +1,17 @@
 import cv2
 
+<<<<<<< HEAD
 try:
     from tools.secret_manager import SecretManager
 except ModuleNotFoundError:
     from secret_manager import SecretManager
+=======
+<<<<<<< HEAD
+from secret_manager import SecretManager
+=======
+from tools.secret_manager import SecretManager
+>>>>>>> 1532dd6862f151b7d05695417a1904bb60e8dd7e
+>>>>>>> Dysproz-master
 
 
 class ThermalCamera:
