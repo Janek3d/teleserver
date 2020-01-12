@@ -13,7 +13,11 @@ pynput>=1.4.5
 pyopenssl>=19.1.0
 pyscreenshot
 wtforms
+<<<<<<< HEAD
+opencv-python
+=======
 pyyaml
 google-api-python-client
 google-auth-httplib2
 google-auth-oauthlib
+>>>>>>> f93c574508b2e7c2940481d4ee5c8fc76c9c182b
