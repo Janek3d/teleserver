@@ -63,7 +63,7 @@ class detection:
         :return occupancy: List of int values
         :rtype occupancy: int
         """
-        
+
         # Run inference
         t0 = time.time()
         for path, img, im0s, vid_cap in self.dataset:
@@ -84,7 +84,7 @@ class detection:
             pred = non_max_suppression(pred, conf_thres, nms_thres)
 
             # Process detections
-            occupancy=[0, 0, 0, 0, 0, 0]
+            occupancy = [0, 0, 0, 0, 0, 0]
 
             for i, det in enumerate(pred):  # detections per image
                 if self.webcam:  # batch_size >= 1
@@ -110,48 +110,46 @@ class detection:
                         s += '%g %ss, ' % (n, self.names[int(c)])  # add to string
 
                     # Write results
-                    
+
                     for *xyxy, conf, cls in det:
                         xavg = (int(xyxy[0]) + int(xyxy[2]))/2
                         yavg = (int(xyxy[1]) + int(xyxy[3]))/2
-                        if int(cls)==0:
-                            #print("Pozycja obietku x:", xavg, 'y: ', yavg)
-                            if(xavg<427 and yavg<361):
+                        if int(cls) == 0:
+                            # print("Pozycja obietku x:", xavg, 'y: ', yavg)
+                            if(xavg < 427 and yavg < 361):
                                 if view_img:
                                     cv2.rectangle(im0, (0, 0), (426, 359), (0, 0, 255), thickness=3)
                                 occupancy[0] = 1
 
-                            if(xavg>427 and yavg<361 and xavg<853):
+                            if(xavg > 427 and yavg < 361 and xavg < 853):
                                 if view_img:
                                     cv2.rectangle(im0, (428, 0), (852, 359), (0, 0, 255), thickness=3)
                                 occupancy[1] = 1
-        
-                            if(xavg>853 and yavg<361):
-                                if view_img:                                
+
+                            if(xavg > 853 and yavg < 361):
+                                if view_img:
                                     cv2.rectangle(im0, (854, 0), (1280, 359), (0, 0, 255), thickness=3)
                                 occupancy[2] = 1
 
-                            if(xavg<427 and yavg>=361):
+                            if(xavg < 427 and yavg >= 361):
                                 if view_img:
                                     cv2.rectangle(im0, (0, 361), (426, 719), (0, 0, 255), thickness=3)
                                 occupancy[3] = 1
 
-                            if(xavg>427 and yavg>=361 and xavg<853):
+                            if(xavg > 427 and yavg >= 361 and xavg < 853):
                                 if view_img:
                                     cv2.rectangle(im0, (428, 361), (852, 719), (0, 0, 255), thickness=3)
                                 occupancy[4] = 1
 
-                            if(xavg>853 and yavg>=361):
+                            if(xavg > 853 and yavg >= 361):
                                 if view_img:
                                     cv2.rectangle(im0, (854, 361), (1279, 719), (0, 0, 255), thickness=3)
                                 occupancy[5] = 1
 
                         if view_img:  # Add bbox to image
-                            if int(cls)==0:
+                            if int(cls) == 0:
                                 label = '%s %.2f' % (self.names[int(cls)], conf)
                                 plot_one_box(xyxy, im0, label=label, color=self.colors[int(cls)])
-
-                #print(bboxy)
 
                 # Stream results
                 if view_img:
@@ -163,7 +161,7 @@ class detection:
 
 
 if __name__ == '__main__':
-    
+
     det = detection()
 
     with torch.no_grad():
