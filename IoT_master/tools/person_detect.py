@@ -1,13 +1,13 @@
 import argparse
 from sys import platform
-
 from tools.yolov3.models import *  # set ONNX_EXPORT in models.py
 from tools.yolov3.utils.datasets import *
 from tools.yolov3.utils.utils import *
 
+
 class detection:
     """
-    This class is used to detect people in the image and find  
+    This class is used to detect people in the image and find
     coordinates of bounding boxes of these people, mainly x center and y center.
 
     """
@@ -16,8 +16,6 @@ class detection:
         Initialization of the model used to detect people.
         """
         img_size = 416
-        #img_size = (320, 192) if ONNX_EXPORT else img_size2  # (320, 192) or (416, 256) or (608, 352) for (height, width)
-
         weights = 'tools/yolov3/weights/yolov3.weights'
         source = 'rtsp://admin:qwerty123456@192.168.1.108/cam/realmonitor?channel=2&subtype=0'
         cfg = 'tools/yolov3/cfg/yolov3.cfg'
@@ -86,7 +84,7 @@ class detection:
             pred = non_max_suppression(pred, conf_thres, nms_thres)
 
             # Process detections
-            occupancy=[0,0,0,0,0,0]
+            occupancy=[0, 0, 0, 0, 0, 0]
 
             for i, det in enumerate(pred):  # detections per image
                 if self.webcam:  # batch_size >= 1
@@ -94,12 +92,12 @@ class detection:
                 else:
                     p, s, im0 = path, '', im0s
                 if view_img:
-                    cv2.rectangle(im0,(0,0),(427,360),(0,255,0),thickness=3)
-                    cv2.rectangle(im0,(428,0),(853,360),(0,255,0),thickness=3)
-                    cv2.rectangle(im0,(854,0),(1280,360),(0,255,0),thickness=3)
-                    cv2.rectangle(im0,(0,361),(427,720),(0,255,0),thickness=3)
-                    cv2.rectangle(im0,(428,361),(853,720),(0,255,0),thickness=3)
-                    cv2.rectangle(im0,(854,361),(1280,720),(0,255,0),thickness=3)
+                    cv2.rectangle(im0, (0, 0), (427, 360), (0, 255, 0), thickness=3)
+                    cv2.rectangle(im0, (428, 0), (853, 360), (0, 255, 0), thickness=3)
+                    cv2.rectangle(im0, (854, 0), (1280, 360), (0, 255, 0), thickness=3)
+                    cv2.rectangle(im0, (0, 361), (427, 720), (0, 255, 0), thickness=3)
+                    cv2.rectangle(im0, (428, 361), (853, 720), (0, 255, 0), thickness=3)
+                    cv2.rectangle(im0, (854, 361), (1280, 720), (0, 255, 0), thickness=3)
 
                 s += '%gx%g ' % img.shape[2:]  # print string
                 if det is not None and len(det):
@@ -111,45 +109,42 @@ class detection:
                         n = (det[:, -1] == c).sum()  # detections per class
                         s += '%g %ss, ' % (n, self.names[int(c)])  # add to string
 
-                    # Print time (inference + NMS)
-                    #print('%sDone. (%.3fs)' % (s, time.time() - t))
-
                     # Write results
                     
                     for *xyxy, conf, cls in det:
-                        xavg = (int(xyxy[0])+int(xyxy[2]))/2
-                        yavg = (int(xyxy[1])+int(xyxy[3]))/2
+                        xavg = (int(xyxy[0]) + int(xyxy[2]))/2
+                        yavg = (int(xyxy[1]) + int(xyxy[3]))/2
                         if int(cls)==0:
                             #print("Pozycja obietku x:", xavg, 'y: ', yavg)
                             if(xavg<427 and yavg<361):
                                 if view_img:
-                                    cv2.rectangle(im0,(0,0),(426,359),(0,0,255),thickness=3)
-                                occupancy[0]=1
+                                    cv2.rectangle(im0, (0, 0), (426, 359), (0, 0, 255), thickness=3)
+                                occupancy[0] = 1
 
                             if(xavg>427 and yavg<361 and xavg<853):
                                 if view_img:
-                                    cv2.rectangle(im0,(428,0),(852,359),(0,0,255),thickness=3)
-                                occupancy[1]=1
+                                    cv2.rectangle(im0, (428, 0), (852, 359), (0, 0, 255), thickness=3)
+                                occupancy[1] = 1
         
                             if(xavg>853 and yavg<361):
                                 if view_img:                                
-                                    cv2.rectangle(im0,(854,0),(1280,359),(0,0,255),thickness=3)
-                                occupancy[2]=1
+                                    cv2.rectangle(im0, (854, 0), (1280, 359), (0, 0, 255), thickness=3)
+                                occupancy[2] = 1
 
                             if(xavg<427 and yavg>=361):
                                 if view_img:
-                                    cv2.rectangle(im0,(0,361),(426,719),(0,0,255),thickness=3)
-                                occupancy[3]=1
+                                    cv2.rectangle(im0, (0, 361), (426, 719), (0, 0, 255), thickness=3)
+                                occupancy[3] = 1
 
                             if(xavg>427 and yavg>=361 and xavg<853):
                                 if view_img:
-                                    cv2.rectangle(im0,(428,361),(852,719),(0,0,255),thickness=3)
-                                occupancy[4]=1
+                                    cv2.rectangle(im0, (428, 361), (852, 719), (0, 0, 255), thickness=3)
+                                occupancy[4] = 1
 
                             if(xavg>853 and yavg>=361):
                                 if view_img:
-                                    cv2.rectangle(im0,(854,361),(1279,719),(0,0,255),thickness=3)
-                                occupancy[5]=1
+                                    cv2.rectangle(im0, (854, 361), (1279, 719), (0, 0, 255), thickness=3)
+                                occupancy[5] = 1
 
                         if view_img:  # Add bbox to image
                             if int(cls)==0:
