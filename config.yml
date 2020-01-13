@@ -2,6 +2,7 @@ calendar:
  iframe:
  api_credentials:
  calendarID:
+ desks: 6
 url_history:
   max_len: 10
   urls:
